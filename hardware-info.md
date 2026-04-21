@@ -12,11 +12,17 @@ OS128 requires the following hardware to work.
 - Ram Expansion Module with at least 512kb ram.
 - 1571 floppy disk drive
 
-### 1.1 VDC memory
+### 1.1
+
+OS128 requires the use of VDC, both because of the functionality VDC has, and because VIC2 would get quite
+in the way for using 'fast mode', while fast mode is highly beneficial for OS128. 
+
+### 1.2 VDC memory
 
 OS128 uses VDC video ram for supporting multiple virtual consoles. This does not fit in 16kb video ram.
+OS128 supports both the 8563 and 8568 VDC chips
 
-### 1.2 Ram Expansion Module
+### 1.3 Ram Expansion Module
 
 OS128 uses both the ram and the dma controller provided by the REU, for this reason GEORAM and alternatives are not supported.
 
@@ -30,6 +36,13 @@ Most REU clones which provide DMA should work, tested are
 
 RAD is untested so far, and has a slight incompatibility with the 17xx REU but should work.
 
+### 1.4 Storage devices
+
+OS128 can boot from most floppy disk drives, and from mass storage devices with a CMD HDD
+compatible DOS (either from a 'native partition' or .dnp image. 
+
+Using a device with burst mode support is highly recommended.
+
 ## 2. Optional hardware
 
 OS128 also supports the following hardware:
@@ -42,6 +55,7 @@ OS128 also supports the following hardware:
 - Ultimate II+ cartridge with command interface enabled
 - 1540 and 1541 drives can be used but their use is not recommended because they do not support burst mode
 - SD2IEC is supported and OS128 can boot from a .dnp image, but due to lack of burst mode support this is not recommended
+- pi1541 is supported but not recommended (due to problems with jiffydos and lack of burst mode support, also when using 1581 emulation)
 
 ## 3. Summary
 
