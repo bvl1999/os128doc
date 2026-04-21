@@ -12,7 +12,7 @@ OS128 requires the following hardware to work.
 - Ram Expansion Module with at least 512kb ram.
 - 1571 floppy disk drive
 
-### 1.1
+### 1.1 80 column display
 
 OS128 requires the use of VDC, both because of the functionality VDC has, and because VIC2 would get quite
 in the way for using 'fast mode', while fast mode is highly beneficial for OS128. 
