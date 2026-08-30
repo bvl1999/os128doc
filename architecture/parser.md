@@ -1,18 +1,18 @@
 # OS128 Minishell Parser Detailed Design
 
-This document describes the parser implementation in the OS128 minishell, which uses `lib/tokenize.asm` for tokenization and `lib/matchword.asm` for command matching.
+This document describes the parser implementation in the OS128 minishell, which uses `kernel/lib/tokenize.asm` for tokenization and `kernel/lib/matchword.asm` for command matching.
 
 ## 1. Parser architecture
 
 The minishell parser is implemented across three main components:
 
 - `kernel/minishell.asm` — main shell loop and command dispatch
-- `lib/tokenize.asm` — input tokenization and parsing utilities
-- `lib/matchword.asm` — keyword table matching for command recognition
+- `kernel/lib/tokenize.asm` — input tokenization and parsing utilities
+- `kernel/lib/matchword.asm` — keyword table matching for command recognition
 
 The parser processes user input from the readline buffer, tokenizes it into words, matches the first token against a command table, and dispatches to the appropriate command handler.
 
-## 2. Input tokenization (`lib/tokenize.asm`)
+## 2. Input tokenization (`kernel/lib/tokenize.asm`)
 
 ### 2.1 Tokenization process
 
@@ -27,7 +27,7 @@ Key functions:
 ### 2.2 Tokenization algorithm
 
 1. `tokenize` validates the readline buffer exists
-2. Sets separator to space (`' '`)
+2. Sets separator to space (`' '`) 
 3. Calls `next_token` to extract tokens
 
 `next_token`:
@@ -55,7 +55,7 @@ Additional parsing functions:
 
 These use `next_token` to advance through tokens and parse specific data types.
 
-## 3. Command matching (`lib/matchword.asm`)
+## 3. Command matching (`kernel/lib/matchword.asm`)
 
 ### 3.1 Matching process
 
@@ -97,14 +97,6 @@ Each entry consists of:
 - Requires exact match up to command length
 - Ensures command ends at word boundary (null terminator)
 
-### 3.5 State variables
-
-- `keyword_tab_ptr` — pointer to keyword table
-- `keyword_tab_pos` — current position in table
-- `keyword_idx` — current command index
-- `search_pos` — current position in input token
-- `found_length` — length of partial match
-
 ## 4. Minishell command dispatch (`kernel/minishell.asm`)
 
 ### 4.1 Shell loop
@@ -139,54 +131,14 @@ For matched commands:
 - Thread creation failures retry with backoff
 - Signal handling for interrupts and termination
 
-## 5. Data structures
+## 5. Minishell utilities and notes
 
-### 5.1 Readline buffer
+- `keyword_tab_ptr` — pointer to keyword table
+- `keyword_tab_pos` — current position in table
+- `keyword_idx` — current command index
+- `search_pos` — current position in input token
+- `found_length` — length of partial match
 
-- `readline_buffer` — input line buffer
-- `readline_pos` — current position in buffer
-- `readline_ptr` — pointer to buffer
+## 6. References
 
-### 5.2 Tokenizer state
-
-- `tok_pos` — position in current token
-- `tok_next` — start of next token
-- `separator` — token separator character
-
-### 5.3 Command table
-
-- Structured array of command entries
-- Each entry: string + handler address
-- Terminated by zero byte
-
-## 6. Example parsing flow
-
-1. User enters: `ls -l /dev`
-
-2. `readline` stores input in buffer
-
-3. `tokenizer_reset` initializes state
-
-4. `tokenize` extracts "ls" (length 2, position 0)
-
-5. `match_word` searches command table for "ls"
-
-6. Match found, returns handler address
-
-7. Command handler runs in new thread
-
-8. Handler calls `next_token` for "-l"
-
-9. Handler calls `next_token` for "/dev"
-
-10. Handler processes arguments and executes
-
-## 7. Key code references
-
-- `kernel/minishell.asm` — `.shell_loop`, `.execute_command`, `.call_command`
-- `lib/tokenize.asm` — `tokenize`, `next_token`, `get_hex_byte`, `get_num_byte`
-- `lib/matchword.asm` — `match_command`, keyword table scanning
-
-## 8. Summary
-
-The OS128 minishell parser uses a two-stage approach: tokenization breaks input into words, and command matching identifies valid commands against a keyword table. This design allows extensible command sets with efficient parsing of arguments and parameters.
+- `kernel/lib/tokenize.asm`, `kernel/lib/matchword.asm`, `kernel/minishell.asm`

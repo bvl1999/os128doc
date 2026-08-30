@@ -1,4 +1,4 @@
-# OS128 Scheduler Detailed Design
+# Scheduler — detailed design
 
 This document describes the OS128 scheduler implementation, including how the scheduler selects threads, how priorities are represented, and how process/thread memory context is activated before a thread begins executing.
 
